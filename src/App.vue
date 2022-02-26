@@ -1,18 +1,22 @@
 <template>
+		<SelectBy/>
 		<GoodGrid/>
 		<AddForm/>
+		
 
 </template>
 
 <script>
 import AddForm from "./components/AddForm.vue"
 import GoodGrid from "./components/GoodGrid.vue"
+import SelectBy from "./components/SelectBy.vue"
 
 export default {
   name: 'App',
   components: {
 	GoodGrid,
-	AddForm
+	AddForm,
+	SelectBy
   }
 }
 </script>

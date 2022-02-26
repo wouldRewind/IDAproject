@@ -15,8 +15,6 @@
 
 		<button class="form-good__add" type="button">Добавить товар</button>
 		</div>
-
-	
 		
 	</form>
 </template>
