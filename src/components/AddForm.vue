@@ -29,8 +29,9 @@ export default {
 	@import "../scss/_const.scss";
 	.form-good{
 		max-width: 332px;
-		margin: 0 auto;
 		padding: 1.5rem;
+		margin-right: 1rem;
+		align-self: flex-start;
 		background: $whiteBlockColor;
 		box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02);
 		&__add{
@@ -91,4 +92,9 @@ export default {
 			display: block;
 		}
 	}
+	@media screen and (max-width: $mobileMenuAppear){
+			.form-good {
+				display: none;
+			}
+		}
 </style>

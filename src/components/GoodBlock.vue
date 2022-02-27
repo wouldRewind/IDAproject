@@ -51,6 +51,9 @@ export default {
 		}
 		&__img{
 			margin-bottom: 1em;
+			& > img {
+				width: 100%;
+			}
 		}
 		&__title{
 			font-size: 1.25rem;
