@@ -2,8 +2,8 @@
 	<main class="good">
 		<div class="good-content">
 			<header class="good-content__menu">
-				<h1 class="good-content__title">Добавление товара</h1>
-				<!-- <MobileMenu/> -->
+				<!-- <h1 class="good-content__title">Добавление товара</h1> -->
+				<MobileMenu/>
 				<div class="good-content__sort">
 					<SelectBy/>
 				</div>
@@ -20,7 +20,7 @@
 import AddForm from "./components/AddForm.vue"
 import GoodGrid from "./components/GoodGrid.vue"
 import SelectBy from "./components/SelectBy.vue"
-// import MobileMenu from "./components/MobileMenu.vue"
+import MobileMenu from "./components/MobileMenu.vue"
 
 export default {
   name: 'App',
@@ -28,7 +28,7 @@ export default {
 	GoodGrid,
 	AddForm,
 	SelectBy,
-	// MobileMenu
+	MobileMenu
   }
 }
 </script>

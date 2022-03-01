@@ -3,8 +3,8 @@
 		
 		<!-- Товар с картинкой и описанием -->
 		<div class="good__img">
-			<img 
-			src="../assets/good.png" alt="">
+			<img src="https://sakhalinstat.gks.ru/storage/document_news/2020/04-20/CVXOgBkK/96adedcd4a9eb59ad3ad2271bed7.jpg" alt="">
+			<!-- https://sakhalinstat.gks.ru/storage/document_news/2020/04-20/CVXOgBkK/96adedcd4a9eb59ad3ad2271bed7.jpg -->
 		</div>
 		<div class="good__info">
 			<h3 class="good__title">Наименование товара</h3>
@@ -50,9 +50,17 @@ export default {
 			padding: 0 1rem;
 		}
 		&__img{
+			// max-width: 332px;
+			// background-image: url(https://rus-ups7.ru/wp-content/uploads/2019/05/20172610151353.jpg);
+			// max-height: 143px;
+			// background-size: contain;
+			// background-repeat: no-repeat;
+			// background-position: center center;
 			margin-bottom: 1em;
 			& > img {
 				width: 100%;
+				height: 200px;
+				object-fit: contain;
 			}
 		}
 		&__title{

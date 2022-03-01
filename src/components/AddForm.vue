@@ -3,7 +3,7 @@
 		<div class="wrapper">
 			<p class="input-field">
 			<label must class="form-good__name" for="gname">Наименование товара</label>
-			<input @input.once="startValidate" ref="nameRef" @input="setFormStatus" :class="{ input_error: v$.name.$errors.length }" v-model="state.name" class="input" type="text" id="gname" name="gname" placeholder="Наименование товара">
+			<input @focus.once="startValidate"  :class="{ input_error: v$.name.$errors.length }" v-model="state.name" class="input" type="text" id="gname" name="gname" placeholder="Наименование товара">
 			<!-- Name error -->
 			<!-- Повесить анимацию появления на ошибку -->
 			<span :class="{ error: v$.name.$errors.length }" v-if="v$.name.$error">{{ v$.name.$errors[0].$message }}</span>
@@ -14,7 +14,7 @@
 			
 			<p class="input-field">
 				<label must class="form-good__link" for="glink">Ссылка на изображение товара</label>
-			<input @input.once="startValidate" :class="{ input_error: v$.imgLink.$errors.length }" v-model="state.imgLink" type="text" id="glink" name="link" placeholder="Введите ссылку">
+			<input @focus.once="startValidate" :class="{ input_error: v$.imgLink.$errors.length }" v-model="state.imgLink" type="text" id="glink" name="link" placeholder="Введите ссылку">
 			<!-- Link error -->
 			<!-- Повесить анимацию появления на ошибку -->
 			<span :class="{ error: v$.imgLink.$errors.length }" v-if="v$.imgLink.$error">{{ v$.imgLink.$errors[0].$message }}</span>
@@ -22,81 +22,77 @@
 
 			<p class="input-field">
 			<label must class="form-good__price" for="gprice">Цена товара</label>
-			<input @input.once="startValidate" :class="{ input_error: v$.price.$errors.length }" v-model="state.price" class="input" id="gprice" name="gprice" placeholder="Введите цену">
+			<input @focus.once="startValidate" :class="{ input_error: v$.price.$errors.length }" v-model="state.price" class="input" id="gprice" name="gprice" placeholder="Введите цену">
 			<!-- Link error -->
 			<!-- Повесить анимацию появления на ошибку -->
 			<span :class="{ error: v$.price.$errors.length }" v-if="v$.price.$error">{{ v$.price.$errors[0].$message }}</span>
 			</p>
-			<button :class="{correct: formIsCorrect}" @click="addGood" class="form-good__add" type="button">Добавить товар</button>
+			<button @click="addGood" :class="{correct: state.formIsCorrect}" class="form-good__add" type="button">Добавить товар</button>
 		</div>
 		
 	</form>
 </template>
 
 <script>
-import { reactive, computed, ref, onMounted, onUpdated } from "vue"
+import { computed, ref, onUpdated } from "vue"
 import useVuelidate from "@vuelidate/core"
-import {required, alpha, helpers, minLength,maxLength,integer,numeric} from "@vuelidate/validators"
+import {required, helpers, minLength,maxLength,numeric} from "@vuelidate/validators"
 
 export default {
 	setup(){
-		const state = reactive({
+
+		const initialState = () => ({
+			formIsCorrect: false,
 			name: "",
 			descr: "",
 			imgLink: "",
 			price: ""
 		})
-	const nameRef = ref(null)
-	// onUpdated(() => {
-	// 	console.log("nameRef",nameRef.value)
-	// })
 
-	const correctImgLink = linkValue => () => !linkValue
+		
+		const state = ref(initialState())
+
+
+
+	// Кастомные валидаторы
+	const nameCyrrilicLetters = () => () => /^[а-я]+$/msiu.test(state.value.name) 
+	const correctImgLink = () => () => /(?=\w)([\w\/]+(?:.png|.jpg|.jpeg|.gif))|([.\~\-\:\w\/]+(?:.png|.jpg|.jpeg‌​|.gif))/.test(state.value.imgLink)
 
 		const rules = computed(() => ({
 			name: {
 				required: helpers.withMessage("Поле является обязательным!", required),
-				alpha: helpers.withMessage("Название должно содержать только буквы!",alpha),
-				minLength: helpers.withMessage("Название должно быть более 4 символов!", minLength(4)),
+				nameCyrrilicLetters: helpers.withMessage("Только буквы русского алфавита!",nameCyrrilicLetters()),
+				minLength: helpers.withMessage("Название должно быть более 2 символов!", minLength(4)),
 				maxLength: helpers.withMessage("Название должно быть не более 40 символов", maxLength(40)),
 			},
 			imgLink: { required: helpers.withMessage("Поле является обязательным!", required),
 			correctImgLink: helpers.withMessage("Это не похоже на ссылку!", correctImgLink(""))
 			 },
 			price: { required: helpers.withMessage("Поле является обязательным!", required),
-			minLength: helpers.withMessage("Название должно быть более 4 символов!", minLength(4)),
-			numeric
+			numeric: helpers.withMessage("Цена должна содержать только цифры!",numeric),
+			minLength: helpers.withMessage("Цена должна быть более 2 символов!", minLength(2)),
 			 }	
 		}))
 		
-
 		const v$ = useVuelidate(rules,state)
 
 		return { state, v$ }
 	},
-	data(){
-		return {
-			formIsCorrect: false
-		}
-	},
-	updated(){ // при обновлении формы смотрю корректность формы
-		this.formIsCorrect = Boolean(!this.v$.$errors.length)
-		console.log(this.formIsCorrect)
+	updated(){ // при обновлении формы обновляю её корректность 
+		this.state.formIsCorrect = Boolean(!this.v$.$errors.length)
 	},
 	methods: {
+		addGood(){
+			if(this.state.formIsCorrect){
+				console.log(this.state)
+				// беру this.state и добавляю в корзину
+			}
+			else this.v$.$validate()
+		},
 		startValidate(){ // запускается один раз и включает валидацию на форм
 			this.v$.$validate()
-			// console.log(this.v$.$errors)
 		},
-		setFormStatus(inputValue){
-			// console.log(inputValue)
-			// console.log(this.v$.$errors)
-			// console.log(this.$refs.value)
-		},
-		addGood(){
-			this.formIsCorrect = this.v$.$errors
-			console.log(this.formIsCorrect.length)
-		}
+		
 	},
 }
 </script>
@@ -126,7 +122,7 @@ export default {
 		background: $whiteBlockColor;
 		box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02);
 		&__add{
-			transition: inherit;
+			transition: $transition;
 			width: 100%;
 			padding: .625rem;
 			background: #EEEEEE;
@@ -138,6 +134,9 @@ export default {
 				background: $successColor;
 				color: white;
 				cursor: pointer;
+				&:hover{
+					background: darken($successColor,10);
+				}
 			}
 		}
 		& label{

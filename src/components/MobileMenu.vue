@@ -1,7 +1,7 @@
 <template>
-	<button class="open" type="button">
-		+
-	</button>
+	<div class="open" type="button">
+		<div class="open__line"></div>
+	</div>
 </template>
 
 <script>
@@ -14,17 +14,30 @@ export default {
 <style lang="scss" scoped>
 	@import "../scss/_const.scss";
 	.open{
-		background-color: lighten($successColor,10); 
-		color: #fff;
-		border-radius: 100%;
-		width: 40px;
-		height: 40px;
-		font-size: 1rem;
-		font-weight: 400;
-		font-family: 'Source Sans Pro', sans-serif;
-		font-size: 1.5rem;
-		font-weight: 1000;
+		$lineHeight: 3px;
+		width: 35px;
+		height: 24px;
 		cursor: pointer;
-		
+		display: flex;
+		align-items: center;
+		position: relative;
+		&::after,&::before{
+			content: "";
+			position: absolute;
+			background-color: $goodColor;
+			width: 100%;
+			height: $lineHeight;
+		}
+		&::after{
+			top: 0;
+		}
+		&::before{
+			bottom: 0;
+		}
+		&__line{
+			width: 100%;
+			height: $lineHeight;
+			background-color: $goodColor;
+		}
 	}
 </style>
