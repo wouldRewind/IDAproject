@@ -2,8 +2,8 @@
 	<main class="good">
 		<div class="good-content">
 			<header class="good-content__menu">
-				<!-- <h1 class="good-content__title">Добавление товара</h1> -->
-				<MobileMenu/>
+				<h1 class="good-content__title">Добавление товара</h1>
+				<!-- <MobileMenu/> -->
 				<div class="good-content__sort">
 					<SelectBy/>
 				</div>

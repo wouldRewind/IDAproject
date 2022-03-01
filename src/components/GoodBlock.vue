@@ -3,13 +3,12 @@
 		
 		<!-- Товар с картинкой и описанием -->
 		<div class="good__img">
-			<img src="https://sakhalinstat.gks.ru/storage/document_news/2020/04-20/CVXOgBkK/96adedcd4a9eb59ad3ad2271bed7.jpg" alt="">
-			<!-- https://sakhalinstat.gks.ru/storage/document_news/2020/04-20/CVXOgBkK/96adedcd4a9eb59ad3ad2271bed7.jpg -->
+			<img :src="this.goodImgLink" alt="Изображение товара">
 		</div>
 		<div class="good__info">
-			<h3 class="good__title">Наименование товара</h3>
-			<p class="good__descr">Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк</p>
-			<p class="good__price">10 000 руб.</p>
+			<h3 class="good__title">{{ this.goodName }}</h3>
+			<p class="good__descr">{{this.goodDescr}}</p>
+			<p class="good__price">{{ this.goodPrice }} руб.</p>
 		</div>
 		<!-- Кнопка удаления -->
 			<GoodDelete :showDelete="showDelete"/>
@@ -32,6 +31,7 @@ export default {
 			showDelete: false
 		}
 	},
+	props: ['goodName','goodImgLink','goodDescr','goodPrice']
 }
 </script>
 
@@ -50,6 +50,7 @@ export default {
 			padding: 0 1rem;
 		}
 		&__img{
+			height: 200px;
 			// max-width: 332px;
 			// background-image: url(https://rus-ups7.ru/wp-content/uploads/2019/05/20172610151353.jpg);
 			// max-height: 143px;
@@ -59,8 +60,8 @@ export default {
 			margin-bottom: 1em;
 			& > img {
 				width: 100%;
-				height: 200px;
-				object-fit: contain;
+				height: 100%;
+				object-fit: cover;
 			}
 		}
 		&__title{

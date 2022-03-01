@@ -10,7 +10,7 @@
 			</p>
 			
 			<label class="form-good__descr" for="gdescr">Описание товара</label>
-			<textarea v-model="state.descr"  type="text" id="gdescr" name="gdescr" placeholder="Введите описание товара"/>
+			<textarea rows="10" cols="20" wrap="hard" v-model="state.descr"  type="text" id="gdescr" name="gdescr" placeholder="Введите описание товара"/>
 			
 			<p class="input-field">
 				<label must class="form-good__link" for="glink">Ссылка на изображение товара</label>
@@ -27,16 +27,16 @@
 			<!-- Повесить анимацию появления на ошибку -->
 			<span :class="{ error: v$.price.$errors.length }" v-if="v$.price.$error">{{ v$.price.$errors[0].$message }}</span>
 			</p>
-			<button @click="addGood" :class="{correct: state.formIsCorrect}" class="form-good__add" type="button">Добавить товар</button>
+			<button @click.once="startValidate" @click="addGood" :class="{correct: state.formIsCorrect}" class="form-good__add" type="button">Добавить товар</button>
 		</div>
-		
 	</form>
 </template>
 
 <script>
-import { computed, ref, onUpdated } from "vue"
+import { computed, ref, watch } from "vue"
 import useVuelidate from "@vuelidate/core"
 import {required, helpers, minLength,maxLength,numeric} from "@vuelidate/validators"
+import { useStore } from 'vuex'
 
 export default {
 	setup(){
@@ -48,14 +48,24 @@ export default {
 			imgLink: "",
 			price: ""
 		})
-
-		
+		const store = useStore()
 		const state = ref(initialState())
 
+		// const splitPrice = () => String(price).split( /(?=(?:...)*$)/ ).join(" ")
 
+		const addGood = () => {
+			if(state.value.formIsCorrect){
+				store.dispatch("addProductToCart",state.value)
+			}
+				console.log(store.state)
+			 }
+		// } 
+		// watch(store.state, (cur,old) => {
+		// 	console.log(cur)
+		// })
 
 	// Кастомные валидаторы
-	const nameCyrrilicLetters = () => () => /^[а-я]+$/msiu.test(state.value.name) 
+	const nameCyrrilicLetters = () => () => /^[а-я ]+$/msiu.test(state.value.name) 
 	const correctImgLink = () => () => /(?=\w)([\w\/]+(?:.png|.jpg|.jpeg|.gif))|([.\~\-\:\w\/]+(?:.png|.jpg|.jpeg‌​|.gif))/.test(state.value.imgLink)
 
 		const rules = computed(() => ({
@@ -69,26 +79,25 @@ export default {
 			correctImgLink: helpers.withMessage("Это не похоже на ссылку!", correctImgLink(""))
 			 },
 			price: { required: helpers.withMessage("Поле является обязательным!", required),
-			numeric: helpers.withMessage("Цена должна содержать только цифры!",numeric),
+			// numeric: helpers.withMessage("Цена должна содержать только цифры!",numeric),
 			minLength: helpers.withMessage("Цена должна быть более 2 символов!", minLength(2)),
 			 }	
 		}))
 		
 		const v$ = useVuelidate(rules,state)
 
-		return { state, v$ }
+		return { 
+			state,
+		 	v$,
+			addGood,
+			// splitPrice
+
+		}
 	},
 	updated(){ // при обновлении формы обновляю её корректность 
 		this.state.formIsCorrect = Boolean(!this.v$.$errors.length)
 	},
 	methods: {
-		addGood(){
-			if(this.state.formIsCorrect){
-				console.log(this.state)
-				// беру this.state и добавляю в корзину
-			}
-			else this.v$.$validate()
-		},
 		startValidate(){ // запускается один раз и включает валидацию на форм
 			this.v$.$validate()
 		},
@@ -170,6 +179,7 @@ export default {
 		& textarea{
 			height: 108px;
 			resize: none;
+			word-break: break-all;
 		}
 		& input,textarea{
 			font-family: "Source Sans Pro", serif;

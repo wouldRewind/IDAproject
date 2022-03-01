@@ -1,17 +1,44 @@
 <template>
 	<div class="grid">
-		<GoodBlock/>
-		<GoodBlock/>
-		<GoodBlock/>
-		<GoodBlock/>
-		<GoodBlock/>
-		<GoodBlock/>
+		<GoodBlock v-for="product in products" :key="product.imgLink" 
+		:goodName='product.name'
+		:goodImgLink="product.imgLink"
+		:goodDescr="product.descr"
+		:goodPrice="splitPrice(product.price)"
+		/>
+		<!-- <GoodBlock
+		goodName='Наименование товаров'
+		goodImgLink="https://rus-ups7.ru/wp-content/uploads/2019/05/20172610151353.jpg"
+		/> -->
+		<!-- <ul>
+			<li v-for="product in products" :key="product.name">
+				{{ product.price }}
+			</li>
+		</ul> -->
 	</div>
 </template>
 
 <script>
+import { computed, onUpdated, watch } from 'vue'
+
+import { useStore } from 'vuex'
 import GoodBlock from "./GoodBlock.vue"
+
 export default {
+	setup(){
+
+		const store = useStore()
+		const products = computed(() => store.getters.cartProducts)
+		
+		const splitPrice = price => String(price).split( /(?=(?:...)*$)/ ).join(" ")
+
+		watch(
+			() => store.getters.cartProducts.length,
+			(cur,old) => console.log(cur,old,products.value)
+		)
+
+		return {products,splitPrice}
+	},
 	name: "GoodGrid",
 	components: {
 		GoodBlock
