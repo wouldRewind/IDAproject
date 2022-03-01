@@ -1,20 +1,12 @@
 <template>
 	<div class="grid">
-		<GoodBlock v-for="product in products" :key="product.imgLink" 
+		<GoodBlock v-for="(product,index) in products" :key="product.imgLink" 
+		:goodIndex="index"
 		:goodName='product.name'
 		:goodImgLink="product.imgLink"
 		:goodDescr="product.descr"
 		:goodPrice="splitPrice(product.price)"
 		/>
-		<!-- <GoodBlock
-		goodName='Наименование товаров'
-		goodImgLink="https://rus-ups7.ru/wp-content/uploads/2019/05/20172610151353.jpg"
-		/> -->
-		<!-- <ul>
-			<li v-for="product in products" :key="product.name">
-				{{ product.price }}
-			</li>
-		</ul> -->
 	</div>
 </template>
 

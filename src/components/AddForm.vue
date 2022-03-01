@@ -72,14 +72,14 @@ export default {
 			name: {
 				required: helpers.withMessage("Поле является обязательным!", required),
 				nameCyrrilicLetters: helpers.withMessage("Только буквы русского алфавита!",nameCyrrilicLetters()),
-				minLength: helpers.withMessage("Название должно быть более 2 символов!", minLength(4)),
+				minLength: helpers.withMessage("Название должно быть более 2 символов!", minLength(2)),
 				maxLength: helpers.withMessage("Название должно быть не более 40 символов", maxLength(40)),
 			},
 			imgLink: { required: helpers.withMessage("Поле является обязательным!", required),
 			correctImgLink: helpers.withMessage("Это не похоже на ссылку!", correctImgLink(""))
 			 },
 			price: { required: helpers.withMessage("Поле является обязательным!", required),
-			// numeric: helpers.withMessage("Цена должна содержать только цифры!",numeric),
+			numeric: helpers.withMessage("Цена должна содержать только цифры!",numeric),
 			minLength: helpers.withMessage("Цена должна быть более 2 символов!", minLength(2)),
 			 }	
 		}))

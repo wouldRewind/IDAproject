@@ -1,15 +1,23 @@
 <template>
 	<transition name="fade" >
-		<button v-if="showDelete" class="delete" type="button">
+		<button @click="deleteGood(indexDelete)" v-if="showDelete" class="delete" type="button">
 			<img src="../assets/trash.svg" alt="Delete">
 		</button>
 	</transition>
 </template>
 
 <script>
+import { useStore } from 'vuex'
 export default {
+	setup(){
+		const store = useStore()
+		const deleteGood = index => store.dispatch("deleteProduct",index)
+		return {
+			deleteGood
+		}
+	},
 	name: "GoodDelete",
-	props: ['showDelete']
+	props: ['indexDelete','showDelete']
 }
 </script>
 

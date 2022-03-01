@@ -11,8 +11,9 @@
 			<p class="good__price">{{ this.goodPrice }} руб.</p>
 		</div>
 		<!-- Кнопка удаления -->
-			<GoodDelete :showDelete="showDelete"/>
-			
+			<GoodDelete
+			:indexDelete="goodIndex" 
+			:showDelete="showDelete"/>
 	</div>
 </template>
 
@@ -31,11 +32,20 @@ export default {
 			showDelete: false
 		}
 	},
-	props: ['goodName','goodImgLink','goodDescr','goodPrice']
+	props: ['goodName','goodImgLink','goodDescr','goodPrice','goodIndex']
 }
 </script>
 
 <style scoped lang="scss">
+	@keyframes appear {
+		0% {
+			opacity: 0;
+		}
+		100%{
+			opacity: 1;
+		}
+	}
+	@import "../scss/_const.scss";
 	.good{
 		box-sizing: border-box;
 		cursor: pointer;
@@ -46,6 +56,9 @@ export default {
 		max-width: 332px;
 		padding-bottom: 1.5em;
 		position: relative;
+		animation-name: appear;
+		animation-duration: 1s;
+		// transition: $transition;
 		&__info{
 			padding: 0 1rem;
 		}

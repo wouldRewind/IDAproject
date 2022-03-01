@@ -1,6 +1,6 @@
 <template>
 	<div class="select-by">
-		<select id="choose" name="">
+		<select v-model="sort" id="choose" name="">
 		<option value="name">По наименованию</option>
 		<option value="asc">По возрастанию цены</option>
 		<option value="desc">По убыванию цены</option>
@@ -10,8 +10,21 @@
 </template>
 
 <script>
+import { reactive } from '@vue/reactivity'
+import { useStore } from 'vuex'
+import { onUpdated } from '@vue/runtime-core'
+
 export default {
-name: "SelectBy"
+	data(){
+		return {
+			sort: "name"
+		}
+	},
+	name: "SelectBy",
+	updated(){
+		console.log(this.$store.dispatch("changeSortOrder",this.sort))
+		console.log(this.sort)
+	}
 }
 </script>
 
