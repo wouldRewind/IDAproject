@@ -1,33 +1,124 @@
 <template>
-	<form action="" class="form-good">
+	<form @submit.prevent action="" class="form-good">
 		<div class="wrapper">
-		<label must class="form-good__name" for="gname">Наименование товара</label>
-		<input class="input" type="text" id="gname" name="gname" placeholder="Наименование товара">
+			<p class="input-field">
+			<label must class="form-good__name" for="gname">Наименование товара</label>
+			<input @input.once="startValidate" ref="nameRef" @input="setFormStatus" :class="{ input_error: v$.name.$errors.length }" v-model="state.name" class="input" type="text" id="gname" name="gname" placeholder="Наименование товара">
+			<!-- Name error -->
+			<!-- Повесить анимацию появления на ошибку -->
+			<span :class="{ error: v$.name.$errors.length }" v-if="v$.name.$error">{{ v$.name.$errors[0].$message }}</span>
+			</p>
+			
+			<label class="form-good__descr" for="gdescr">Описание товара</label>
+			<textarea v-model="state.descr"  type="text" id="gdescr" name="gdescr" placeholder="Введите описание товара"/>
+			
+			<p class="input-field">
+				<label must class="form-good__link" for="glink">Ссылка на изображение товара</label>
+			<input @input.once="startValidate" :class="{ input_error: v$.imgLink.$errors.length }" v-model="state.imgLink" type="text" id="glink" name="link" placeholder="Введите ссылку">
+			<!-- Link error -->
+			<!-- Повесить анимацию появления на ошибку -->
+			<span :class="{ error: v$.imgLink.$errors.length }" v-if="v$.imgLink.$error">{{ v$.imgLink.$errors[0].$message }}</span>
+			</p>
 
-		<label class="form-good__descr" for="gdescr">Описание товара</label>
-		<textarea  type="text" id="gdescr" name="gdescr" placeholder="Введите описание товара"/>
-		
-		<label must class="form-good__link" for="glink">Ссылка на изображение товара</label>
-		<input type="text" id="glink" name="link" placeholder="Введите ссылку">
-
-		<label must class="form-good__price" for="gprice">Цена товара</label>
-		<input class="input" type="number" id="gprice" name="gprice" placeholder="Введите цену">
-
-		<button class="form-good__add" type="button">Добавить товар</button>
+			<p class="input-field">
+			<label must class="form-good__price" for="gprice">Цена товара</label>
+			<input @input.once="startValidate" :class="{ input_error: v$.price.$errors.length }" v-model="state.price" class="input" id="gprice" name="gprice" placeholder="Введите цену">
+			<!-- Link error -->
+			<!-- Повесить анимацию появления на ошибку -->
+			<span :class="{ error: v$.price.$errors.length }" v-if="v$.price.$error">{{ v$.price.$errors[0].$message }}</span>
+			</p>
+			<button :class="{correct: formIsCorrect}" @click="addGood" class="form-good__add" type="button">Добавить товар</button>
 		</div>
 		
 	</form>
 </template>
 
 <script>
+import { reactive, computed, ref, onMounted, onUpdated } from "vue"
+import useVuelidate from "@vuelidate/core"
+import {required, alpha, helpers, minLength,maxLength,integer,numeric} from "@vuelidate/validators"
+
 export default {
-	name: "AddForm"
+	setup(){
+		const state = reactive({
+			name: "",
+			descr: "",
+			imgLink: "",
+			price: ""
+		})
+	const nameRef = ref(null)
+	// onUpdated(() => {
+	// 	console.log("nameRef",nameRef.value)
+	// })
+
+	const correctImgLink = linkValue => () => !linkValue
+
+		const rules = computed(() => ({
+			name: {
+				required: helpers.withMessage("Поле является обязательным!", required),
+				alpha: helpers.withMessage("Название должно содержать только буквы!",alpha),
+				minLength: helpers.withMessage("Название должно быть более 4 символов!", minLength(4)),
+				maxLength: helpers.withMessage("Название должно быть не более 40 символов", maxLength(40)),
+			},
+			imgLink: { required: helpers.withMessage("Поле является обязательным!", required),
+			correctImgLink: helpers.withMessage("Это не похоже на ссылку!", correctImgLink(""))
+			 },
+			price: { required: helpers.withMessage("Поле является обязательным!", required),
+			minLength: helpers.withMessage("Название должно быть более 4 символов!", minLength(4)),
+			numeric
+			 }	
+		}))
+		
+
+		const v$ = useVuelidate(rules,state)
+
+		return { state, v$ }
+	},
+	data(){
+		return {
+			formIsCorrect: false
+		}
+	},
+	updated(){ // при обновлении формы смотрю корректность формы
+		this.formIsCorrect = Boolean(!this.v$.$errors.length)
+		console.log(this.formIsCorrect)
+	},
+	methods: {
+		startValidate(){ // запускается один раз и включает валидацию на форм
+			this.v$.$validate()
+			// console.log(this.v$.$errors)
+		},
+		setFormStatus(inputValue){
+			// console.log(inputValue)
+			// console.log(this.v$.$errors)
+			// console.log(this.$refs.value)
+		},
+		addGood(){
+			this.formIsCorrect = this.v$.$errors
+			console.log(this.formIsCorrect.length)
+		}
+	},
 }
 </script>
 
 <style lang="scss" scoped>
 	@import "../scss/_const.scss";
+	.input-field{
+		margin-bottom: 1rem;
+		position: relative;
+	}
+	.error{
+		position: absolute;
+		bottom: -15px;
+		// подредачить отступ снизу
+		font-size: .5rem;
+		font-weight: 400;
+		color: $errorColor;
+		display: block;
+		// margin-bottom: 2px;
+	}
 	.form-good{
+		transition: all $transition;
 		max-width: 332px;
 		padding: 1.5rem;
 		margin-right: 1rem;
@@ -35,6 +126,7 @@ export default {
 		background: $whiteBlockColor;
 		box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02);
 		&__add{
+			transition: inherit;
 			width: 100%;
 			padding: .625rem;
 			background: #EEEEEE;
@@ -42,8 +134,14 @@ export default {
 			color: $placeholderColor;
 			font-size: .75rem;
 			font-weight: 600;
+			&.correct{
+				background: $successColor;
+				color: white;
+				cursor: pointer;
+			}
 		}
 		& label{
+			display: block;
 			font-size: .625rem;
 			color: $formTitleColor;
 			display: inline-block;
@@ -64,7 +162,6 @@ export default {
 		}
 		& input{
 			padding: .625rem 0 .625rem 1rem;
-			margin-bottom: 1rem;
 			&::-webkit-outer-spin-button,
 			&::-webkit-inner-spin-button {
 -webkit-appearance: none;
@@ -76,12 +173,15 @@ export default {
 			resize: none;
 		}
 		& input,textarea{
+			font-family: "Source Sans Pro", serif;
+			font-size: 0.75rem;
+			color: $goodColor;
 			width: 100%;
 			border: 0;
 			box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 			border-radius: 4px;
 			padding: 10px 0 11px 1rem;
-			margin-bottom: 1rem;
+			// margin-bottom: 1rem;
 			&::placeholder{
 				font-size: .75rem;
 				color: $placeholderColor;
@@ -92,9 +192,21 @@ export default {
 			display: block;
 		}
 	}
+	input.input{
+		&_error{
+			border: 1px solid $errorColor;
+		}
+	}
 	@media screen and (max-width: $mobileMenuAppear){
 			.form-good {
-				display: none;
+				position: absolute;
+				top: 0;
+				left: 0	;
+				// &:hover{
+				// 	transform: translate(-100%,-100%);
+				// 	transform: translate();
+				// }
+				// display: none;
 			}
 		}
 </style>
