@@ -7,14 +7,20 @@
 </template>
 
 <script>
+import { watch } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 export default {
 	setup(){
 		const store = useStore()
 		const deleteGood = index => store.dispatch("deleteProduct",index)
+
+		// watch(() => store.getters.cartProducts.length,
+		// (cur,old) => console.log("Удалил"))
+
 		return {
 			deleteGood
 		}
+
 	},
 	name: "GoodDelete",
 	props: ['indexDelete','showDelete']

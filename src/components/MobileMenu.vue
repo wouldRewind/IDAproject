@@ -18,7 +18,7 @@ export default {
 		width: 35px;
 		height: 24px;
 		cursor: pointer;
-		display: flex;
+		display: none;
 		align-items: center;
 		position: relative;
 		&::after,&::before{
@@ -40,4 +40,9 @@ export default {
 			background-color: $goodColor;
 		}
 	}
+	@media screen and (max-width: $mobileMenuAppear){
+	.open{
+		display: flex;
+	}
+}
 </style>

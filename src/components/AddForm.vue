@@ -1,5 +1,7 @@
 <template>
-	<form @submit.prevent action="" class="form-good">
+	<form @submit.prevent action="" class="form-good"
+	:class="[form-good, {opened: showMobileMenu}]"
+	>
 		<div class="wrapper">
 			<p class="input-field">
 			<label must class="form-good__name" for="gname">Наименование товара</label>
@@ -57,7 +59,7 @@ export default {
 			if(state.value.formIsCorrect){
 				store.dispatch("addProductToCart",state.value)
 			}
-				console.log(store.state)
+				// console.log(store.state)
 			 }
 		// } 
 		// watch(store.state, (cur,old) => {
@@ -94,7 +96,9 @@ export default {
 
 		}
 	},
+	props: ['showMobileMenu','mobile'],
 	updated(){ // при обновлении формы обновляю её корректность 
+	console.log(this.showMobileMenu)
 		this.state.formIsCorrect = Boolean(!this.v$.$errors.length)
 	},
 	methods: {
@@ -208,14 +212,20 @@ export default {
 	}
 	@media screen and (max-width: $mobileMenuAppear){
 			.form-good {
-				position: absolute;
+				// display: none;
+				position: fixed;
 				top: 0;
 				left: 0	;
+				transition: $transition;
+				z-index: 5;
+				transform: translate(-100%,-100%);
+				// transform: translate(0);
 				// &:hover{
-				// 	transform: translate(-100%,-100%);
-				// 	transform: translate();
 				// }
 				// display: none;
+				&.opened{
+					transform: translate(0);
+				}
 			}
 		}
 </style>

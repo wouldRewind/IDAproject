@@ -1,16 +1,21 @@
 <template>
-	<main class="good">
+	<div @click="showMenu(false)" v-if="showMobileMenu" class="fade">
+		
+	</div>
+	<main
+	:class="{'menuOpened': showMobileMenu}" 
+	class="good">
 		<div class="good-content">
 			<header class="good-content__menu">
 				<h1 class="good-content__title">Добавление товара</h1>
-				<!-- <MobileMenu/> -->
+				<MobileMenu @click="showMenu"/>
 				<div class="good-content__sort">
 					<SelectBy/>
 				</div>
 			</header>
 			<div class="good-content__main">
 				<GoodGrid/>
-				<AddForm/>
+				<AddForm :mobile="mobile" :showMobileMenu="showMobileMenu"/>
 			</div>
 		</div>
 	</main>
@@ -29,6 +34,17 @@ export default {
 	AddForm,
 	SelectBy,
 	MobileMenu
+  },
+  data(){
+	  return {
+		  showMobileMenu: false
+	  }
+  },
+  methods: {
+	  
+	  showMenu(boolVal){
+		  this.showMobileMenu = boolVal;
+	  }
   }
 }
 </script>
@@ -44,6 +60,7 @@ html{
 	font-size: 100%;
 }
 
+
 *{
 	/* Разобраться, почему не работает */
 	margin: 0px;
@@ -57,7 +74,24 @@ html{
 // #app {
 // }
 
+.fade{
+	width: 100%;
+	height: 10000000px;
+	position: absolute;
+	overflow: hidden;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,.5);
+	z-index: 1;
+}
+
 .good{
+	&.menuOpened{
+		width: 100%;
+		height: 100%;
+		position: relative;
+		overflow-y: hidden;
+	}
 	padding: 2rem;
 	&-content{
 		&__main{
@@ -82,6 +116,15 @@ html{
 	.good-content__main{
 		justify-content: start;
 		margin-top: 2rem;
+	}
+}
+@media screen and (max-width: $mobileMenuAppear){
+	.good{
+		&-content{
+			&__title{
+				display: none;
+			}
+		}
 	}
 }
 

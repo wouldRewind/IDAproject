@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { computed, onUpdated, watch } from 'vue'
+import { computed, onUpdated, reactive, unref, watch } from 'vue'
 
 import { useStore } from 'vuex'
 import GoodBlock from "./GoodBlock.vue"
@@ -19,15 +19,29 @@ import GoodBlock from "./GoodBlock.vue"
 export default {
 	setup(){
 
+		const stringifyProducts = products => JSON.stringify(JSON.parse(JSON.stringify(products.value))) 
+
 		const store = useStore()
+		// отсортированный список товаров
 		const products = computed(() => store.getters.cartProducts)
-		
+		// const storagedProducts = JSON
+		// .parse(localStorage.products)  
+		// JSON.parse(localStorage.products)
+
 		const splitPrice = price => String(price).split( /(?=(?:...)*$)/ ).join(" ")
 
+		// чекаю список на изменение длинны
 		watch(
 			() => store.getters.cartProducts.length,
-			(cur,old) => console.log(cur,old,products.value)
-		)
+			(cur,old) => {
+				// localStorage.clear()
+				// const stringifiedProducts = stringifyProducts(products)
+
+				// localStorage.products = stringifiedProducts;
+				// console.log(localStorage)
+			})
+		
+		
 
 		return {products,splitPrice}
 	},

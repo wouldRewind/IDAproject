@@ -6,6 +6,7 @@ import { initialState } from "./initialState";
 const getters = {
 	// отсортированные товары
 	cartProducts: ({ items,sortBy }) => {
+		// для сортировки напиши мутацию
 		switch (sortBy) {
 			case "name":
 				return items.sort((a,b) => a.name.localeCompare(b.name))
@@ -35,7 +36,6 @@ const actions = {
 const mutations = {
 	pushProductToCart(state, good){
 		state.items.push({
-			...state,
 			...good
 		})
 	},
@@ -44,7 +44,6 @@ const mutations = {
 	},
 	deleteProductItem(state,id){
 		// delete state.items[id]
-		console.log(state.items, id)
 		state.items.splice(id,1)
 	}
 }
