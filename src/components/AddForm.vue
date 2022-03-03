@@ -116,8 +116,10 @@ export default {
 		font-weight: 400;
 		color: $errorColor;
 		display: block;
-		// margin-bottom: 2px;
 	}
+
+
+
 	.form-good{
 		transition: all $transition;
 		max-width: 332px;

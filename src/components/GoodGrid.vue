@@ -11,22 +11,27 @@
 </template>
 
 <script>
-import { computed, onUpdated, reactive, unref, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 
 import { useStore } from 'vuex'
 import GoodBlock from "./GoodBlock.vue"
 
 export default {
 	setup(){
-
-		const stringifyProducts = products => JSON.stringify(JSON.parse(JSON.stringify(products.value))) 
+		// const stringifyProducts = products => JSON.stringify(JSON.parse(JSON.stringify(products.value)))
 
 		const store = useStore()
 		// отсортированный список товаров
 		const products = computed(() => store.getters.cartProducts)
-		// const storagedProducts = JSON
-		// .parse(localStorage.products)  
-		// JSON.parse(localStorage.products)
+
+		// onMounted(() => {
+		// 	// Если данных нет в LS - заношу
+		// 	if(!localStorage.length){
+		// 		console.log("Заношу данные в LS!")
+		// 		localStorage.products = stringifyProducts(products)
+		// 	}	
+		// })
+
 
 		const splitPrice = price => String(price).split( /(?=(?:...)*$)/ ).join(" ")
 
@@ -36,10 +41,15 @@ export default {
 			() => {
 				store.dispatch("sortProducts")
 			})
-		
-		
-
-		return {products,splitPrice}
+		watch(
+			() => store.getters.cartProducts.length,
+			() => {
+				// обновляю localStorage
+			}
+		)
+		// JSON.parse(localStorage.products)
+		return {products,
+		splitPrice}
 	},
 	name: "GoodGrid",
 	components: {
