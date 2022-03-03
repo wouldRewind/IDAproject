@@ -22,8 +22,7 @@ export default {
 	},
 	name: "SelectBy",
 	updated(){
-		console.log(this.$store.dispatch("changeSortOrder",this.sort))
-		console.log(this.sort)
+		this.$store.commit("changeSortBy",this.sort)
 	}
 }
 </script>

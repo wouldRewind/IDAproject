@@ -35,14 +35,13 @@
 </template>
 
 <script>
-import { computed, ref, watch } from "vue"
+import { computed, ref } from "vue"
 import useVuelidate from "@vuelidate/core"
 import {required, helpers, minLength,maxLength,numeric} from "@vuelidate/validators"
 import { useStore } from 'vuex'
 
 export default {
-	setup(){
-
+	setup(props){
 		const initialState = () => ({
 			formIsCorrect: false,
 			name: "",
@@ -53,18 +52,13 @@ export default {
 		const store = useStore()
 		const state = ref(initialState())
 
-		// const splitPrice = () => String(price).split( /(?=(?:...)*$)/ ).join(" ")
-
 		const addGood = () => {
 			if(state.value.formIsCorrect){
+				props.closeMobileMenu(false)
 				store.dispatch("addProductToCart",state.value)
+				store.dispatch("sortProducts")
 			}
-				// console.log(store.state)
 			 }
-		// } 
-		// watch(store.state, (cur,old) => {
-		// 	console.log(cur)
-		// })
 
 	// Кастомные валидаторы
 	const nameCyrrilicLetters = () => () => /^[а-я ]+$/msiu.test(state.value.name) 
@@ -92,13 +86,11 @@ export default {
 			state,
 		 	v$,
 			addGood,
-			// splitPrice
 
 		}
 	},
-	props: ['showMobileMenu','mobile'],
+	props: ['showMobileMenu','closeMobileMenu'],
 	updated(){ // при обновлении формы обновляю её корректность 
-	console.log(this.showMobileMenu)
 		this.state.formIsCorrect = Boolean(!this.v$.$errors.length)
 	},
 	methods: {

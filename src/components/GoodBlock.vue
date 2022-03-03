@@ -1,9 +1,13 @@
 <template>
 	<div @mouseenter="showDelete = !showDelete" @mouseleave="showDelete = !showDelete" class="good">
-		
+
 		<!-- Товар с картинкой и описанием -->
 		<div class="good__img">
-			<img :src="this.goodImgLink" alt="Изображение товара">
+			<!-- <img v-show="!imgIsLoaded" src="../assets/spin.gif" alt=""> -->
+			<img :src="this.goodImgLink"
+			@load="load"
+			
+			loading="lazy" alt="Изображение товара">
 		</div>
 		<div class="good__info">
 			<h3 class="good__title">{{ this.goodName }}</h3>
@@ -20,19 +24,31 @@
 
 
 <script>
+import { reactive, watch } from '@vue/runtime-core'
+import { useStore } from 'vuex'
 import GoodDelete from "./GoodDelete.vue"
 
 export default {
+	
 	name: "GoodBlock",
 	components: {
 		GoodDelete
 	},
 	data() {
 		return {
-			showDelete: false
+			showDelete: false,
+			imgIsLoaded: false
 		}
 	},
-	props: ['goodName','goodImgLink','goodDescr','goodPrice','goodIndex']
+	props: ['goodName','goodImgLink','goodDescr','goodPrice','goodIndex'],
+	methods: {
+		load(){
+			this.imgIsLoaded = true
+		}
+	},
+	mounted(){
+	}
+	
 }
 </script>
 
@@ -64,12 +80,6 @@ export default {
 		}
 		&__img{
 			height: 200px;
-			// max-width: 332px;
-			// background-image: url(https://rus-ups7.ru/wp-content/uploads/2019/05/20172610151353.jpg);
-			// max-height: 143px;
-			// background-size: contain;
-			// background-repeat: no-repeat;
-			// background-position: center center;
 			margin-bottom: 1em;
 			& > img {
 				width: 100%;

@@ -30,15 +30,11 @@ export default {
 
 		const splitPrice = price => String(price).split( /(?=(?:...)*$)/ ).join(" ")
 
-		// чекаю список на изменение длинны
+		// Сортирую, если изменился sortBy
 		watch(
-			() => store.getters.cartProducts.length,
-			(cur,old) => {
-				// localStorage.clear()
-				// const stringifiedProducts = stringifyProducts(products)
-
-				// localStorage.products = stringifiedProducts;
-				// console.log(localStorage)
+			() => store.getters.sortType,
+			() => {
+				store.dispatch("sortProducts")
 			})
 		
 		

@@ -5,19 +5,8 @@ import { initialState } from "./initialState";
 // getters
 const getters = {
 	// отсортированные товары
-	cartProducts: ({ items,sortBy }) => {
-		// для сортировки напиши мутацию
-		switch (sortBy) {
-			case "name":
-				return items.sort((a,b) => a.name.localeCompare(b.name))
-			case "asc":
-				return items.sort((a,b) => a.price - b.price )
-			case "desc":
-				return items.sort((a,b) => b.price - a.price )
-			default:
-				return items
-		}
-	}
+	cartProducts: ({ items }) => items,
+	sortType: ({sortBy}) => sortBy
 	
 }
 // actions
@@ -31,9 +20,27 @@ const actions = {
 	deleteProduct({ commit }, id){
 		commit("deleteProductItem",id)
 	},
+	sortProducts({ commit }){
+		commit("changeProductsOrder")
+	}
 }
 // mutations
 const mutations = {
+	changeProductsOrder(state){
+		switch (state.sortBy) {
+			case "name":
+				state.items = state.items.sort((a,b) => a.name.localeCompare(b.name))
+				break
+			case "asc":
+				state.items = state.items.sort((a,b) => a.price - b.price )
+				break
+			case "desc":
+				state.items = state.items.sort((a,b) => b.price - a.price )
+				break
+			default:
+				return
+		}
+	},
 	pushProductToCart(state, good){
 		state.items.push({
 			...good
