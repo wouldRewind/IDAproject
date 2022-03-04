@@ -47,7 +47,6 @@ export default {
 				// обновляю localStorage
 			}
 		)
-		// JSON.parse(localStorage.products)
 		return {products,
 		splitPrice}
 	},

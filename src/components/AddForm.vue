@@ -35,13 +35,13 @@
 </template>
 
 <script>
-import { computed, ref } from "vue"
+import { computed, onUpdated, ref } from "vue"
 import useVuelidate from "@vuelidate/core"
 import {required, helpers, minLength,maxLength,numeric} from "@vuelidate/validators"
 import { useStore } from 'vuex'
 
 export default {
-	setup(props){
+	setup({ closeMobileMenu }){
 		const initialState = () => ({
 			formIsCorrect: false,
 			name: "",
@@ -54,7 +54,7 @@ export default {
 
 		const addGood = () => {
 			if(state.value.formIsCorrect){
-				props.closeMobileMenu(false)
+				closeMobileMenu(false)
 				store.dispatch("addProductToCart",state.value)
 				store.dispatch("sortProducts")
 			}
@@ -81,18 +81,15 @@ export default {
 		}))
 		
 		const v$ = useVuelidate(rules,state)
+		onUpdated(() => state.value.formIsCorrect = Boolean(!v$.value.$errors.length))
 
 		return { 
 			state,
 		 	v$,
 			addGood,
-
 		}
 	},
 	props: ['showMobileMenu','closeMobileMenu'],
-	updated(){ // при обновлении формы обновляю её корректность 
-		this.state.formIsCorrect = Boolean(!this.v$.$errors.length)
-	},
 	methods: {
 		startValidate(){ // запускается один раз и включает валидацию на форм
 			this.v$.$validate()

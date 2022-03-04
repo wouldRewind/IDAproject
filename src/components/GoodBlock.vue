@@ -1,53 +1,87 @@
 <template>
-	<div @mouseenter="showDelete = !showDelete" @mouseleave="showDelete = !showDelete" class="good">
+	<div @mouseenter="onHoverBlock" @mouseleave="onHoverBlock" class="good">
 
 		<!-- Товар с картинкой и описанием -->
 		<div class="good__img">
 			<!-- <img v-show="!imgIsLoaded" src="../assets/spin.gif" alt=""> -->
-			<img :src="this.goodImgLink"
+			<img :src="goodImgLink"
 			@load="load"
 			
 			loading="lazy" alt="Изображение товара">
 		</div>
 		<div class="good__info">
-			<h3 class="good__title">{{ this.goodName }}</h3>
-			<p class="good__descr">{{this.goodDescr}}</p>
-			<p class="good__price">{{ this.goodPrice }} руб.</p>
+			<h3 class="good__title">{{ goodName }}</h3>
+			<p class="good__descr">{{goodDescr}}</p>
+			<p class="good__price">{{ goodPrice }} руб.</p>
 		</div>
 		<!-- Кнопка удаления -->
 			<GoodDelete
+			:showConfirm="showComfirmMenu()"
 			:indexDelete="goodIndex" 
 			:showDelete="showDelete"/>
+			<GoodDeleteConfirm
+			:confirmMenuIsVisible="confirmDeleteIsActive"
+			/>
+			<Fade 
+			:hideFade="hideConfirmMenu()"
+			:fadeIsVisible="confirmDeleteIsActive"/>
 	</div>
 </template>
 
 
 
 <script>
-import { reactive, watch } from '@vue/runtime-core'
-import { useStore } from 'vuex'
-import GoodDelete from "./GoodDelete.vue"
-
+import GoodDelete from "./GoodDelete/GoodDelete.vue"
+import GoodDeleteConfirm from "./GoodDelete/GoodDeleteConfirm.vue"
+import Fade from "../components/Fade.vue"
 export default {
 	
 	name: "GoodBlock",
 	components: {
-		GoodDelete
+		GoodDelete,
+		GoodDeleteConfirm,
+		Fade
 	},
 	data() {
 		return {
 			showDelete: false,
-			imgIsLoaded: false
+			imgIsLoaded: false,
+			confirmDeleteIsActive: false // visible or not
 		}
 	},
-	props: ['goodName','goodImgLink','goodDescr','goodPrice','goodIndex'],
+	props: {
+		goodName: {},
+		goodDescr: {},
+		goodPrice: {},
+		goodIndex: {},
+		goodImgLink: {
+			type: String,
+			default: null
+		},
+	},
 	methods: {
+		onHoverBlock(){
+			// Если окно confirm активно, то при наведении на блок кнопка удаления не показывается
+			if(this.confirmDeleteIsActive)
+				this.showDelete = false
+			else 
+				this.showDelete = !this.showDelete
+		},
+		showComfirmMenu(){
+			return () => {
+				this.confirmDeleteIsActive = true // меню удаления теперь активно
+				this.showDelete = false // кнопка удаления больше неактивна
+			}
+			},
+		hideConfirmMenu(){
+			return () => {
+				this.confirmDeleteIsActive = false
+			}
+		},
 		load(){
 			this.imgIsLoaded = true
 		}
 	},
-	mounted(){
-	}
 	
 }
 </script>
@@ -63,6 +97,7 @@ export default {
 	}
 	@import "../scss/_const.scss";
 	.good{
+		position: relative;
 		box-sizing: border-box;
 		cursor: pointer;
 		background-color: #FFFEFB;
@@ -74,7 +109,6 @@ export default {
 		position: relative;
 		animation-name: appear;
 		animation-duration: 1s;
-		// transition: $transition;
 		&__info{
 			padding: 0 1rem;
 		}

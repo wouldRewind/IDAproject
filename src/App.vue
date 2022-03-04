@@ -1,7 +1,8 @@
 <template>
-	<div @click="showMenu(false)" v-if="showMobileMenu" class="fade">
-		
-	</div>
+	<Fade
+	:hideForm="showMenu"
+	:hideFormArg="false"
+	:fadeIsVisible="showMobileMenu"/>
 	<main
 	:class="{'menuOpened': showMobileMenu}" 
 	class="good">
@@ -22,6 +23,7 @@
 </template>
 
 <script>
+import Fade from "./components/Fade.vue"
 import AddForm from "./components/AddForm.vue"
 import GoodGrid from "./components/GoodGrid.vue"
 import SelectBy from "./components/SelectBy.vue"
@@ -33,7 +35,8 @@ export default {
 	GoodGrid,
 	AddForm,
 	SelectBy,
-	MobileMenu
+	MobileMenu,
+	Fade
   },
   data(){
 	  return {
@@ -41,13 +44,22 @@ export default {
 	  }
   },
   methods: {
-	  
 	  showMenu(boolVal){
+		  const body = document.querySelector("body").classList 
+		  // если мобильное меню больше не показывается - отменяю overflow
+		  if(!boolVal)
+		  body.remove('prevent-scroll')
+		  else
+		  body.add('prevent-scroll')
+
 		  this.showMobileMenu = boolVal;
 	  }
   }
 }
 </script>
+
+
+
 
 <style lang="scss">
 @import "./scss/_const.scss";
@@ -58,6 +70,18 @@ html{
 	font-family: 'Source Sans Pro', sans-serif;
 	background: #FAF9F7;
 	font-size: 100%;
+	// overflow: hidden;
+}
+
+.fade{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	overflow: hidden;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,.5);
+	z-index: 1;
 }
 
 
@@ -71,19 +95,12 @@ html{
 	text-decoration: none;
 }
 
-// #app {
-// }
-
-.fade{
-	width: 100%;
-	height: 10000000px;
-	position: absolute;
+//  resticts #app scroll
+.prevent-scroll{
 	overflow: hidden;
-	top: 0;
-	left: 0;
-	background: rgba(0,0,0,.5);
-	z-index: 1;
 }
+
+
 
 .good{
 	&.menuOpened{

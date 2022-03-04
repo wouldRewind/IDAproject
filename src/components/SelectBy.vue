@@ -10,9 +10,6 @@
 </template>
 
 <script>
-import { reactive } from '@vue/reactivity'
-import { useStore } from 'vuex'
-import { onUpdated } from '@vue/runtime-core'
 
 export default {
 	data(){

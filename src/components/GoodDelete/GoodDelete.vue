@@ -1,21 +1,20 @@
 <template>
 	<transition name="fade" >
-		<button @click="deleteGood(indexDelete)" v-if="showDelete" class="delete" type="button">
-			<img src="../assets/trash.svg" alt="Delete">
+		<button @click="showConfirm" v-if="showDelete" class="delete" type="button">
+			<img src="../../assets/trash.svg" alt="Delete">
 		</button>
 	</transition>
 </template>
 
 <script>
-import { watch } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 export default {
-	setup(){
+	setup(props){
+		console.log(props.showConfirm)
 		const store = useStore()
-		const deleteGood = index => store.dispatch("deleteProduct",index)
-
-		// watch(() => store.getters.cartProducts.length,
-		// (cur,old) => console.log("Удалил"))
+		const deleteGood = index => {
+			store.dispatch("deleteProduct",index)
+		}
 
 		return {
 			deleteGood
@@ -23,12 +22,12 @@ export default {
 
 	},
 	name: "GoodDelete",
-	props: ['indexDelete','showDelete']
+	props: ['indexDelete','showDelete','showConfirm']
 }
 </script>
 
 <style lang="scss" scoped>
-	@import "../scss/_const.scss";
+	@import "../../scss/_const.scss";
 
 	.delete{
 		// Стилизую кнопку удаления товара
