@@ -40,8 +40,8 @@ export default {
 		border: 0;
 		// Размещаю кнопку удаления товара
 		position: absolute;
-		top: -1rem;
-		right: -1rem;
+		top: -.5rem;
+		right: -.5rem;
 		// Hover-эффект кнопки
 		&:hover{
 			background: darken($errorColor,10);

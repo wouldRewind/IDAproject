@@ -1,9 +1,10 @@
 <template>
 	<Fade
-	:hideForm="showMenu"
-	:hideFormArg="false"
+	:hideFade="showMenu"
+	:hideFadeArg="false"
 	:fadeIsVisible="showMobileMenu"/>
-	<main
+	<div class="flex-wrap">
+		<main
 	:class="{'menuOpened': showMobileMenu}" 
 	class="good">
 		<div class="good-content">
@@ -20,6 +21,7 @@
 			</div>
 		</div>
 	</main>
+	</div>
 </template>
 
 <script>
@@ -64,13 +66,19 @@ export default {
 <style lang="scss">
 @import "./scss/_const.scss";
 /* Импортирую шрифт с макета */
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap');
 
 html{
 	font-family: 'Source Sans Pro', sans-serif;
 	background: #FAF9F7;
 	font-size: 100%;
 	// overflow: hidden;
+}
+
+.flex-wrap{
+	display: flex;
+	justify-content: center;
+	padding: 2rem;
 }
 
 .fade{
@@ -103,18 +111,20 @@ html{
 
 
 .good{
+	
 	&.menuOpened{
 		width: 100%;
 		height: 100%;
 		position: relative;
 		overflow-y: hidden;
 	}
-	padding: 2rem;
 	&-content{
+		display: inline-block;
+		width: auto;
+		margin: 0 auto;
 		&__main{
-		display: flex;
+		display: inline-flex;
 		flex-direction: row-reverse;
-		justify-content: space-between;
 	}
 	&__menu{
 		display: flex;
@@ -131,8 +141,8 @@ html{
 }
 @media screen and (max-width: 650px){
 	.good-content__main{
-		justify-content: start;
 		margin-top: 2rem;
+		position: relative;
 	}
 }
 @media screen and (max-width: $mobileMenuAppear){

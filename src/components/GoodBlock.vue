@@ -97,20 +97,19 @@ export default {
 	}
 	@import "../scss/_const.scss";
 	.good{
+		padding: 0 !important;
 		position: relative;
-		box-sizing: border-box;
 		cursor: pointer;
 		background-color: #FFFEFB;
 		box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02);
 		border-radius: 4px;
 		color: #3F3F3F;
 		max-width: 332px;
-		padding-bottom: 1.5em;
 		position: relative;
 		animation-name: appear;
 		animation-duration: 1s;
 		&__info{
-			padding: 0 1rem;
+			padding: 0 1rem 1.5rem 1rem;
 		}
 		&__img{
 			height: 200px;

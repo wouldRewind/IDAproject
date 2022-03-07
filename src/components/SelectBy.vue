@@ -1,9 +1,9 @@
 <template>
 	<div class="select-by">
 		<select v-model="sort" id="choose" name="">
-		<option value="name">По наименованию</option>
-		<option value="asc">По возрастанию цены</option>
-		<option value="desc">По убыванию цены</option>
+		<option value="name">По умолчанию</option>
+		<option value="asc">Возрастание цены</option>
+		<option value="desc">Убывание цены</option>
 	</select>
 	<img class="arrow" src="../assets/Arrow.png" alt="323">
 	</div>
@@ -39,6 +39,8 @@ export default {
 }
 
 select {
+	font-family: 'Source Sans Pro', serif;
+	max-width: 150.49px;
   -webkit-appearance: none;
   -moz-appearance: none;
 	color: $placeholderColor;
