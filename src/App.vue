@@ -1,5 +1,6 @@
 <template>
 	<Fade
+	:fadeDegree="5"
 	:hideFade="showMenu"
 	:hideFadeArg="false"
 	:fadeIsVisible="showMobileMenu"/>

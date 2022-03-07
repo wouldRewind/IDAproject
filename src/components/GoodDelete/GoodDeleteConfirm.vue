@@ -1,27 +1,38 @@
 <template>
-	<div class="confirm" v-show="confirmMenuIsVisible">
+	<transition name="show-confirm">
+		<div class="confirm" v-show="confirmMenuIsVisible">
 	<div class="confirm-wrap">
 		<header class="confirm-header">
 			<h3 class="confirm-header__title">
 		Удаление товара
 			</h3>
-			<div class="confirm-header__close">
-				X
-			</div>
 		</header>
 	</div>
   <div class="confirm__text">Вы уверены, что хотите удалить товар?</div>
   <div class="confirm-btns">
-    <button class="confirm-btns__abort">Отмена</button>
-    <button class="confirm-btns__delete">Удалить</button>
+    <button @click="closeConfirmMenu" class="confirm-btns__abort">Отмена</button>
+    <button @click="deleteGood(deleteIndex)" class="confirm-btns__delete">Удалить</button>
   </div>
 </div>
+	</transition>
 </template>
 
 <script>
+import { useStore } from 'vuex'
 export default {
+	setup({ closeConfirmMenu }){
+		const store = useStore()
+		const deleteGood = index => {
+			console.log(index)
+			store.dispatch("deleteProduct",index)
+			closeConfirmMenu()
+		}
+		return {
+			deleteGood
+		}
+	},
 	name: "GoodDeleteConfirm",
-	props: ['confirmMenuIsVisible']
+	props: ['confirmMenuIsVisible','closeConfirmMenu','deleteIndex']
 }
 </script>
 
@@ -85,17 +96,17 @@ export default {
 			&__title{
 				font-size: 1rem;
 			}
-			&__close{
-				transition: $transition;
-				width: .9em;
-  				height: .9em;
-  				background-color: $lightColor;
-  				clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
-				cursor: pointer;
-				&:hover{
-					transform: rotate(180deg);
-				}
-			}
 		}
+	}
+
+	.show-confirm-enter-to, .show-confirm-leave-from{
+		opacity: 1;
+	}
+	.show-confirm-leave-to, .show-confirm-enter-from{
+		opacity: 0;
+	}
+
+	.show-confirm-enter-active, .show-confirm-leave-active {
+		transition: opacity $transition;
 	}
 </style>

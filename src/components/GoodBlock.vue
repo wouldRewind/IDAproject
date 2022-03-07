@@ -11,18 +11,20 @@
 		</div>
 		<div class="good__info">
 			<h3 class="good__title">{{ goodName }}</h3>
-			<p class="good__descr">{{goodDescr}}</p>
+			<p class="good__descr">{{ goodDescr }}</p>
 			<p class="good__price">{{ goodPrice }} руб.</p>
 		</div>
 		<!-- Кнопка удаления -->
 			<GoodDelete
-			:showConfirm="showComfirmMenu()"
+			:toogleConfirm="toogleComfirmMenu()"
 			:indexDelete="goodIndex" 
-			:showDelete="showDelete"/>
+			:showDelete="(isMobileMode && !confirmDeleteIsActive) || showDelete"/>
 			<GoodDeleteConfirm
+			:deleteIndex="goodIndex"
+			:closeConfirmMenu="toogleComfirmMenu(false,true)"
 			:confirmMenuIsVisible="confirmDeleteIsActive"
 			/>
-			<Fade 
+			<Fade
 			:hideFade="hideConfirmMenu()"
 			:fadeIsVisible="confirmDeleteIsActive"/>
 	</div>
@@ -49,6 +51,11 @@ export default {
 			confirmDeleteIsActive: false // visible or not
 		}
 	},
+	computed: {
+		isMobileMode(){
+			return window.innerWidth <=680 ? true: false
+		}
+	},
 	props: {
 		goodName: {},
 		goodDescr: {},
@@ -67,10 +74,10 @@ export default {
 			else 
 				this.showDelete = !this.showDelete
 		},
-		showComfirmMenu(){
+		toogleComfirmMenu(confirmDelete = true, showDelete = false){
 			return () => {
-				this.confirmDeleteIsActive = true // меню удаления теперь активно
-				this.showDelete = false // кнопка удаления больше неактивна
+				this.confirmDeleteIsActive = confirmDelete // меню удаления теперь активно
+				this.showDelete = showDelete // кнопка удаления больше неактивна
 			}
 			},
 		hideConfirmMenu(){

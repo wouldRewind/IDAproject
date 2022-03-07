@@ -189,8 +189,6 @@ export default {
 		  formIsCorrect.value = Boolean(!v$.value.$errors.length) && Object.values(state.value).every((val, i) => i !== 1 ? val : true) // костыль - descr не обязателен 
 	  }
     );
-    //  ??????????????????????
-	console.log(v$)
     return {
       state,
 	  formIsCorrect,
@@ -328,7 +326,7 @@ input.input {
     top: 0;
     left: 0;
     transition: $transition;
-    z-index: 5;
+    z-index: 15;
     transform: translate(-100%, -100%);
     // transform: translate(0);
     // &:hover{

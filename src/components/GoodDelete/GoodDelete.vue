@@ -1,28 +1,15 @@
 <template>
 	<transition name="fade" >
-		<button @click="showConfirm" v-if="showDelete" class="delete" type="button">
+		<button @click="toogleConfirm" v-if="showDelete" class="delete" type="button">
 			<img src="../../assets/trash.svg" alt="Delete">
 		</button>
 	</transition>
 </template>
 
 <script>
-import { useStore } from 'vuex'
 export default {
-	setup(props){
-		console.log(props.showConfirm)
-		const store = useStore()
-		const deleteGood = index => {
-			store.dispatch("deleteProduct",index)
-		}
-
-		return {
-			deleteGood
-		}
-
-	},
 	name: "GoodDelete",
-	props: ['indexDelete','showDelete','showConfirm']
+	props: ['indexDelete','showDelete','toogleConfirm']
 }
 </script>
 
@@ -48,9 +35,9 @@ export default {
 		}
 	}
 	.fade-enter-active, .fade-leave-active {
-transition: opacity $transition;
+		transition: opacity $transition;
 	}
-	.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
-opacity: 0;
+	.fade-enter, .fade-leave-to {
+		opacity: 0;
 	}
 </style>

@@ -1,12 +1,11 @@
 <template>
-	<div @click="hideFade(hideFadeArg)" v-if="fadeIsVisible" class="fade"></div>
+	<transition name="fade-anim">
+		<div :style="{ 'z-index': fadeDegree }" @click="hideFade(hideFadeArg)" v-if="fadeIsVisible" class="fade"></div>
+	</transition>
 </template>
 
 <script>
 export default {
-	setup() {
-		
-	},
 	name: "Fade",
 	props: {
 		fadeIsVisible: {
@@ -20,12 +19,18 @@ export default {
 		hideFadeArg: {
 			type: Boolean,
 			default: false
+		},
+		fadeDegree: {
+			type: Number,
+			default: 3
 		}
 	}
 }
 </script>
 
 <style lang="scss" scoped>
+@import "../scss/_const.scss";
+
 
 .fade{
 	width: 100%;
@@ -35,7 +40,20 @@ export default {
 	top: 0;
 	left: 0;
 	background: rgba(0,0,0,.5);
-	z-index: 3;
 }
+
+	.fade-anim-enter-from, .fade-anim-leave-to {
+		opacity: 0;
+	}
+	.fade-anim-enter-to, .fade-anim-leave-from {
+		opacity: 1;
+	}
+
+
+	.fade-anim-enter-active,
+	.fade-anim-leave-active{
+		transition: opacity $transition;
+}
+
 
 </style>
