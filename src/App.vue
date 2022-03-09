@@ -17,7 +17,7 @@
 				</div>
 			</header>
 			<div class="good-content__main">
-				<GoodGrid/>
+				<GoodGrid :mobileMenuIsActive="showMobileMenu"/>
 				<AddForm :closeMobileMenu="showMenu"  :showMobileMenu="showMobileMenu"/>
 			</div>
 		</div>

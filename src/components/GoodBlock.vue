@@ -18,15 +18,15 @@
 			<GoodDelete
 			:toogleConfirm="toogleComfirmMenu()"
 			:indexDelete="goodIndex" 
-			:showDelete="(isMobileMode && !confirmDeleteIsActive) || showDelete"/>
+			:showDelete="deleteBtnIsVisible"/>
 			<GoodDeleteConfirm
 			:deleteIndex="goodIndex"
 			:closeConfirmMenu="toogleComfirmMenu(false,true)"
-			:confirmMenuIsVisible="confirmDeleteIsActive"
+			:confirmMenuIsVisible="confirmIsVisible"
 			/>
 			<Fade
 			:hideFade="hideConfirmMenu()"
-			:fadeIsVisible="confirmDeleteIsActive"/>
+			:fadeIsVisible="confirmIsVisible"/>
 	</div>
 </template>
 
@@ -52,15 +52,25 @@ export default {
 		}
 	},
 	computed: {
+		confirmIsVisible(){
+			return this.confirmDeleteIsActive && !this.mobileMenuIsActive
+		},
 		isMobileMode(){
 			return window.innerWidth <=680 ? true: false
+		},
+		deleteBtnIsVisible(){
+			return !this.mobileMenuIsActive && ((this.isMobileMode && !this.confirmDeleteIsActive) || this.showDelete)
 		}
+
 	},
 	props: {
 		goodName: {},
 		goodDescr: {},
 		goodPrice: {},
 		goodIndex: {},
+		mobileMenuIsActive: {
+			type: Boolean
+		},
 		goodImgLink: {
 			type: String,
 			default: null

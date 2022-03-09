@@ -1,6 +1,7 @@
 <template>
 	<div class="grid">
 		<GoodBlock v-for="(product,index) in products" :key="product.imgLink" 
+		:mobileMenuIsActive="mobileMenuIsActive"
 		:goodIndex="index"
 		:goodName='product.name'
 		:goodImgLink="product.imgLink"
@@ -17,6 +18,7 @@ import { useStore } from 'vuex'
 import GoodBlock from "./GoodBlock.vue"
 
 export default {
+	props: ['mobileMenuIsActive'],
 	setup(){
 		// const stringifyProducts = products => JSON.stringify(JSON.parse(JSON.stringify(products.value)))
 
