@@ -1,6 +1,6 @@
 <template>
-	<div class="grid">
-		<GoodBlock v-for="(product,index) in products" :key="product.imgLink" 
+	<transition-group tag="ul" name="list" class="grid">
+		<GoodBlock v-for="(product,index) in products" :key="index" 
 		:mobileMenuIsActive="mobileMenuIsActive"
 		:goodIndex="index"
 		:goodName='product.name'
@@ -8,7 +8,9 @@
 		:goodDescr="product.descr"
 		:goodPrice="splitPrice(product.price)"
 		/>
-	</div>
+	</transition-group>
+	<!-- <div class="grid">
+	</div> -->
 </template>
 
 <script>
@@ -99,4 +101,13 @@ export default {
 				}
 			}
 		}
+	.list-enter-from{
+		opacity: 0;
+	}
+	.list-enter-to{
+		opacity: 1;
+	}
+	.list-enter-active{
+		transition: all 2s;
+	}
 </style>
