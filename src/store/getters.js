@@ -1,5 +1,6 @@
 export const getters = {
 	// отсортированные товары
 	cartProducts: ({ items }) => items,
-	sortType: ({sortBy}) => sortBy
+	sortType: ({sortBy}) => sortBy,
+	cartSize: ({ items: { length } }) => length 
 }

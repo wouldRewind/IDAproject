@@ -1,18 +1,29 @@
+import _ from "lodash"
+
 export const mutations = {
 	changeProductsOrder(state){
+		const shuffledItems = _.shuffle(state.items) // for animation
 		switch (state.sortBy) {
 			case "name":
-				state.items = state.items.sort((a,b) => a.name.localeCompare(b.name))
+				state.items = shuffledItems.sort((a,b) => a.name.localeCompare(b.name))
 				break
 			case "asc":
-				state.items = state.items.sort((a,b) => a.price - b.price )
+				state.items = shuffledItems.sort((a,b) => a.price - b.price )
 				break
 			case "desc":
-				state.items = state.items.sort((a,b) => b.price - a.price )
+				state.items = shuffledItems.sort((a,b) => b.price - a.price)
 				break
+			case "shuffle":
+				state.items = shuffledItems
 			default:
 				return
 		}
+	},
+	setLocalStorageState(state, products){
+		console.log("МУТИРУЕМ СТЕЙТ!")
+		// if(products.items.length)
+			Object.assign(state, products)
+		
 	},
 	pushProductToCart(state, good){
 		state.items.push({

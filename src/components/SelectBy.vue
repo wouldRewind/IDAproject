@@ -1,11 +1,12 @@
 <template>
 	<div class="select-by">
 		<select v-model="sort" id="choose" name="">
-		<option value="name">По умолчанию</option>
-		<option value="asc">Возрастание цены</option>
-		<option value="desc">Убывание цены</option>
+			<option value="name">По умолчанию</option>
+			<option value="asc">Возрастание цены</option>
+			<option value="desc">Убывание цены</option>
+			<option value="shuffle">Перемешать</option>
 	</select>
-	<img class="arrow" src="../assets/Arrow.png" alt="323">
+	<img class="arrow" src="../assets/Arrow.png" alt="">
 	</div>
 </template>
 

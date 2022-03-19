@@ -123,8 +123,8 @@ export default {
 		color: #3F3F3F;
 		max-width: 332px;
 		position: relative;
-		animation-name: appear;
-		animation-duration: 1s;
+		// animation-name: appear;
+		// animation-duration: 1s;
 		&__info{
 			padding: 0 1rem 1.5rem 1rem;
 		}

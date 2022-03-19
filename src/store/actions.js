@@ -1,14 +1,18 @@
 export const actions = {
-	addProductToCart({ commit }, good){
-		commit("pushProductToCart",good)
+	addProductToCart({ commit }, good) {
+		commit("pushProductToCart", good)
 	},
-	changeSortOrder({ commit },newSortBy){
-		commit("changeSortBy",newSortBy)
+	changeSortOrder({ commit }, newSortBy) {
+		commit("changeSortBy", newSortBy)
 	},
-	deleteProduct({ commit }, id){
-		commit("deleteProductItem",id)
+	deleteProduct({ commit }, id) {
+		commit("deleteProductItem", id)
 	},
-	sortProducts({ commit }){
+	sortProducts({ commit }) {
 		commit("changeProductsOrder")
+	},
+	setLocalStorageState({ commit }, products) {
+		if (localStorage && localStorage.products)
+			commit("setLocalStorageState", products)
 	}
 }

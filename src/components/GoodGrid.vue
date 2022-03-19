@@ -1,6 +1,6 @@
 <template>
-	<transition-group tag="ul" name="list" class="grid">
-		<GoodBlock v-for="(product,index) in products" :key="index" 
+	<transition-group :key="cartSize"  tag="ul" name="list" class="grid">
+		<GoodBlock v-for="(product,index) in products" :key="product.imgLink" 
 		:mobileMenuIsActive="mobileMenuIsActive"
 		:goodIndex="index"
 		:goodName='product.name'
@@ -9,8 +9,6 @@
 		:goodPrice="splitPrice(product.price)"
 		/>
 	</transition-group>
-	<!-- <div class="grid">
-	</div> -->
 </template>
 
 <script>
@@ -25,16 +23,12 @@ export default {
 		// const stringifyProducts = products => JSON.stringify(JSON.parse(JSON.stringify(products.value)))
 
 		const store = useStore()
-		// отсортированный список товаров
 		const products = computed(() => store.getters.cartProducts)
 
-		// onMounted(() => {
-		// 	// Если данных нет в LS - заношу
-		// 	if(!localStorage.length){
-		// 		console.log("Заношу данные в LS!")
-		// 		localStorage.products = stringifyProducts(products)
-		// 	}	
-		// })
+		const cartSize = computed(() => {
+			console.log(store.getters.cartSize)
+			return store.getters.cartSize
+		})
 
 
 		const splitPrice = price => String(price).split( /(?=(?:...)*$)/ ).join(" ")
@@ -42,17 +36,13 @@ export default {
 		// Сортирую, если изменился sortBy
 		watch(
 			() => store.getters.sortType,
-			() => {
-				store.dispatch("sortProducts")
-			})
-		watch(
-			() => store.getters.cartProducts.length,
-			() => {
-				// обновляю localStorage
+			() => store.dispatch("sortProducts")
+			)
+		return {
+			products,
+			splitPrice,
+			cartSize
 			}
-		)
-		return {products,
-		splitPrice}
 	},
 	name: "GoodGrid",
 	components: {
@@ -71,15 +61,12 @@ export default {
 	}
 	@media screen and (max-width: 1100px){
 			.grid {
-				// display: none;
 				margin: 0 auto;
 				grid-template-columns: repeat(2,1fr);
 			}
 		}
 	@media screen and (max-width: 860px){
 			.grid {
-				// display: none;
-				// margin-left: auto;
 				margin-right: 0;
 				grid-template-columns: repeat(1,1fr);
 			}
@@ -97,17 +84,10 @@ export default {
 				margin-right: 0;
 				& .good{
 					max-width: 100%;
-					// margin: 0 auto;
 				}
 			}
 		}
-	.list-enter-from{
-		opacity: 0;
-	}
-	.list-enter-to{
-		opacity: 1;
-	}
-	.list-enter-active{
-		transition: all 2s;
-	}
+.list-move{
+	transition: transform 1s;
+}
 </style>
