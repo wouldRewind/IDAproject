@@ -156,8 +156,10 @@ html{
 	}
 }
 @media screen and (max-width: $mobileMenuAppear){
+
 	.good{
 		&-content{
+			transition: $transition;
 			&__title{
 				display: none;
 			}

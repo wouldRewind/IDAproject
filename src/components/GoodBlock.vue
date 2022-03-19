@@ -3,11 +3,12 @@
 
 		<!-- Товар с картинкой и описанием -->
 		<div class="good__img">
-			<!-- <img v-show="!imgIsLoaded" src="../assets/spin.gif" alt=""> -->
+			<img v-show="!imageSource" src="../assets/spin.gif" alt="">
 			<img :src="goodImgLink"
 			@load="load"
-			
-			loading="lazy" alt="Изображение товара">
+			lazy :alt="goodName"
+			v-show="imageSource"
+			>
 		</div>
 		<div class="good__info">
 			<h3 class="good__title">{{ goodName }}</h3>
@@ -48,7 +49,8 @@ export default {
 		return {
 			showDelete: false,
 			imgIsLoaded: false,
-			confirmDeleteIsActive: false // visible or not
+			confirmDeleteIsActive: false, // visible or not,
+			imageSource: ''
 		}
 	},
 	computed: {
@@ -56,12 +58,15 @@ export default {
 			return this.confirmDeleteIsActive && !this.mobileMenuIsActive
 		},
 		isMobileMode(){
-			return window.innerWidth <=680 ? true: false
+			return window.innerWidth <= 680 ? true: false
 		},
 		deleteBtnIsVisible(){
 			return !this.mobileMenuIsActive && ((this.isMobileMode && !this.confirmDeleteIsActive) || this.showDelete)
 		}
 
+	},
+	created(){
+		this.loadImage(this.goodImgLink)
 	},
 	props: {
 		goodName: {},
@@ -77,6 +82,13 @@ export default {
 		},
 	},
 	methods: {
+		loadImage(src){
+			const goodImage = document.createElement("img")
+			goodImage.onload = () => {
+				this.imageSource = src
+			}
+			goodImage.src = src
+		},
 		onHoverBlock(){
 			// Если окно confirm активно, то при наведении на блок кнопка удаления не показывается
 			if(this.confirmDeleteIsActive)

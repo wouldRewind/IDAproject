@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { computed, onMounted, watch } from 'vue'
+import { computed, watch } from 'vue'
 
 import { useStore } from 'vuex'
 import GoodBlock from "./GoodBlock.vue"
@@ -20,13 +20,14 @@ import GoodBlock from "./GoodBlock.vue"
 export default {
 	props: ['mobileMenuIsActive'],
 	setup(){
-		// const stringifyProducts = products => JSON.stringify(JSON.parse(JSON.stringify(products.value)))
-
 		const store = useStore()
 		const products = computed(() => store.getters.cartProducts)
-
+		watch(() => store.getters.cartSize,
+			(amount,prevAmount) => {
+				console.log(prevAmount,amount)
+			})
 		const cartSize = computed(() => {
-			console.log(store.getters.cartSize)
+			// console.log("Количество товаров в корзине изменилось!")
 			return store.getters.cartSize
 		})
 
