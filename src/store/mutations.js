@@ -2,39 +2,35 @@ import _ from "lodash"
 
 export const mutations = {
 	changeProductsOrder(state){
-		const shuffledItems = _.shuffle(state.items) // for animation
+		const shuffledItems = _.shuffle(state.items);
 		switch (state.sortBy) {
 			case "name":
-				state.items = shuffledItems.sort((a,b) => a.name.localeCompare(b.name))
-				break
+				state.items = shuffledItems.sort((a, b) => a.name.localeCompare(b.name));
+				break;
 			case "asc":
-				state.items = shuffledItems.sort((a,b) => a.price - b.price )
-				break
+				state.items = shuffledItems.sort((a, b) => a.price - b.price);
+				break;
 			case "desc":
-				state.items = shuffledItems.sort((a,b) => b.price - a.price)
+				state.items = shuffledItems.sort((a, b) => b.price - a.price);
 				break
 			case "shuffle":
-				state.items = shuffledItems
+				state.items = shuffledItems;
 			default:
-				return
+				return;
 		}
 	},
-	setLocalStorageState(state, products){
-		console.log("МУТИРУЕМ СТЕЙТ!")
-		// if(products.items.length)
-			Object.assign(state, products)
-		
+	setLocalStorageState(state, payload){
+		Object.assign(state, payload);
 	},
-	pushProductToCart(state, good){
+	pushProductToCart(state, payload){
 		state.items.push({
-			...good
-		})
+			...payload,
+		});
 	},
-	changeSortBy(state,newSortBy){
-		state.sortBy = newSortBy
+	changeSortBy(state, payload){
+		state.sortBy = payload;
 	},
-	deleteProductItem(state,id){
-		// delete state.items[id]
-		state.items.splice(id,1)
+	deleteProductItem(state,payload){
+		state.items.splice(payload, 1);
 	}
 }

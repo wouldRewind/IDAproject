@@ -59,11 +59,11 @@ export default {
 	  }
   },
   beforeCreate(){
-	  window.addEventListener("beforeunload",() =>{
+	  window.addEventListener("beforeunload",() => {
 		  const stringifiedStore = JSON.stringify(this.$store.state)
 		  localStorage.setItem("products",stringifiedStore)
 	  })
-	  if(localStorage && localStorage.products){
+	  if (localStorage && localStorage.products) {
 		  this.$store.dispatch("setLocalStorageState",JSON.parse(localStorage.products))
 	  }
   },

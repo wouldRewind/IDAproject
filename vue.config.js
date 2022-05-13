@@ -1,3 +1,3 @@
 module.exports = {
-    publicPath: '/IDAproject/'
-}
+	publicPath: process.env.NODE_ENV === "production" ? "/IDAproject/" : "/",
+  };

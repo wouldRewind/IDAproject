@@ -23,7 +23,6 @@ export default {
 	setup({ closeConfirmMenu }){
 		const store = useStore()
 		const deleteGood = index => {
-			console.log(index)
 			store.dispatch("deleteProduct",index)
 			closeConfirmMenu()
 		}

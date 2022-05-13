@@ -11,7 +11,7 @@
           >Наименование товара</label
         >
         <input
-          @focus.once="startValidate"
+          @input="startValidate"
           :class="{ input_error: v$.name.$errors.length }"
           v-model="state.name"
           class="input"
@@ -29,17 +29,24 @@
         >
       </p>
       <p class="input-field">
-        <label class="form-good__descr" for="gdescr">Описание товара</label>
+        <label must class="form-good__descr" for="descr">Описание товара</label>
         <textarea
+		@input="startValidate"
+          :class="{ highlight: v$.descr.$errors.length }"
           rows="10"
           cols="20"
           wrap="hard"
           v-model="state.descr"
           type="text"
-          id="gdescr"
-          name="gdescr"
+          id="descr"
+          name="descr"
           placeholder="Введите описание товара"
         />
+        <span
+          :class="{ error: v$.descr.$errors.length }"
+          v-if="v$.descr.$error"
+          >{{ v$.descr.$errors[0].$message }}</span
+        >
       </p>
 
       <p class="input-field">
@@ -47,7 +54,7 @@
           >Ссылка на изображение товара</label
         >
         <input
-          @focus.once="startValidate"
+          @input="startValidate"
           :class="{ input_error: v$.imgLink.$errors.length }"
           v-model="state.imgLink"
           type="text"
@@ -67,7 +74,7 @@
       <p class="input-field input-field__">
         <label must class="form-good__price" for="gprice">Цена товара</label>
         <input
-          @focus.once="startValidate"
+          @input="startValidate"
           :class="{ input_error: v$.price.$errors.length }"
           v-model="state.price"
           class="input"
@@ -84,8 +91,7 @@
         >
       </p>
       <button
-        @click.once="startValidate"
-        @click="addGood"
+        @click="handleAddClick"
         :class="{ correct: formIsCorrect }"
         class="form-good__add"
         type="button"
@@ -97,7 +103,7 @@
 </template>
 
 <script>
-import { computed, onUpdated, ref } from "vue";
+import { computed, onMounted, onUpdated, ref } from "vue";
 import useVuelidate from "@vuelidate/core";
 import {
   required,
@@ -107,14 +113,11 @@ import {
   numeric,
 } from "@vuelidate/validators";
 import { useStore } from "vuex";
-
+import _ from "lodash";
 export default {
   setup({ closeMobileMenu }) {
-
-	let formIsCorrect = ref(false)
-
+    let formIsCorrect = ref(false);
     const initialState = () => ({
-    //   formIsCorrect: false,
       name: "",
       descr: "",
       imgLink: "",
@@ -123,16 +126,13 @@ export default {
     const store = useStore();
     const state = ref(initialState());
 
-
-
     // Кастомные валидаторы
-    const nameCyrrilicLetters = () => () =>
-      /^[а-я ]+$/imsu.test(state.value.name);
     const correctImgLink = () => () =>
       /(?=\w)([\w\/]+(?:.png|.jpg|.jpeg|.gif))|([.\~\-\:\w\/]+(?:.png|.jpg|.jpeg‌​|.gif))/.test(
         state.value.imgLink
       );
 
+    // Правила валидирования
     const rules = computed(() => ({
       name: {
         required: helpers.withMessage("Поле является обязательным!", required),
@@ -144,6 +144,17 @@ export default {
         maxLength: helpers.withMessage(
           "Название должно быть не более 40 символов",
           maxLength(40)
+        ),
+      },
+      descr: {
+        required: helpers.withMessage("Поле является обязательным!", required),
+        minLength: helpers.withMessage(
+          "Описание должно быть более 10-ти символов!",
+          minLength(10)
+        ),
+        maxLength: helpers.withMessage(
+          "Описание не должно превышать 70-ти символов!",
+          maxLength(70)
         ),
       },
       imgLink: {
@@ -167,47 +178,63 @@ export default {
     }));
 
     const v$ = useVuelidate(rules, state);
+	console.log(v$);
 
-	const clearForm = () => {
-		state.value = {
-			...initialState()
-		}
-		v$.value.$reset()
-	}
+    const clearForm = () => {
+      state.value = {
+        ...initialState(),
+      };
+      v$.value.$reset();
+    };
 
-	const addGood = () => {
+    const addGood = () => {
       if (formIsCorrect.value) {
         closeMobileMenu(false);
         store.dispatch("addProductToCart", state.value);
         store.dispatch("sortProducts");
-		clearForm()
+        clearForm();
       }
     };
 
-    onUpdated(
-      () => {
-		  formIsCorrect.value = Boolean(!v$.value.$errors.length) && Object.values(state.value).every((val, i) => i !== 1 ? val : true) // костыль - descr не обязателен 
+    const handleAddClick = () => {
+	  const formFields = Object.keys(state.value);
+	  for (let i = 0; i < formFields.length; i ++) {
+		  v$.value[formFields[i]].$validate();
+		  if (v$.value[formFields[i]].$errors.length) {
+			  return;
+		  }
 	  }
-    );
+	  // Ошибок нет - товар добавляется в корзину
+	  if (!v$.value.$errors.length) {
+		  addGood();
+	  }
+    };
+
+
+	const startValidate =  function({ target: { id } }) {
+      if (!id) {
+        // клик по неактивной кнопке - валидация всей формы
+        this.v$.$validate();
+      } else {
+        // клик по инпуту
+        this.v$[id].$validate();
+      }
+    };
+
+    onUpdated(() => {
+      formIsCorrect.value =
+        Boolean(!v$.value.$errors.length) &&
+        Object.values(state.value).every((val, i) => (i !== 1 ? val : true));
+    });
     return {
       state,
-	  formIsCorrect,
+      formIsCorrect,
       v$,
-      addGood,
+      handleAddClick,
+	  startValidate
     };
   },
   props: ["showMobileMenu", "closeMobileMenu"],
-  methods: {
-    startValidate({ target: { id } }) {
-		if(!id) // клик по неактивной кнопке - валидация всей формы
-			{
-				this.v$.$validate()
-				return
-			}
-		// клик по инпуту
-      this.v$[id].$validate();
-    },
-  },
 };
 </script>
 
@@ -288,12 +315,6 @@ export default {
       -webkit-appearance: none;
     }
   }
-  & textarea {
-    height: 108px;
-    resize: none;
-    word-break: break-all;
-    padding: 0.625rem 8rem 0.625rem 1rem;
-  }
   & input,
   textarea {
     font-family: "Source Sans Pro", serif;
@@ -308,6 +329,16 @@ export default {
       font-size: 0.75rem;
       color: $placeholderColor;
       font-weight: 400;
+    }
+  }
+  & textarea {
+    height: 108px;
+    border: 1px solid transparent;
+    resize: none;
+    word-break: break-all;
+    padding: 0.625rem 8rem 0.625rem 1rem;
+    &.highlight {
+      border: 1px solid $errorColor;
     }
   }
   & > * {

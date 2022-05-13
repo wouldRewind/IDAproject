@@ -22,12 +22,7 @@ export default {
 	setup(){
 		const store = useStore()
 		const products = computed(() => store.getters.cartProducts)
-		watch(() => store.getters.cartSize,
-			(amount,prevAmount) => {
-				console.log(prevAmount,amount)
-			})
 		const cartSize = computed(() => {
-			// console.log("Количество товаров в корзине изменилось!")
 			return store.getters.cartSize
 		})
 

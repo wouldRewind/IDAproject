@@ -15,4 +15,4 @@ export const actions = {
 		if (localStorage && localStorage.products)
 			commit("setLocalStorageState", products)
 	}
-}
+};
