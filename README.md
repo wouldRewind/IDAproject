@@ -1,24 +1,25 @@
-# idaproject
+# Тестовое задание в компанию [**idaproject**](https://idaproject.com/)  
 
-## Project setup
+![image](https://user-images.githubusercontent.com/46257224/159126182-da02d7ce-83e3-4066-8c33-1793d73f59e5.png)
+
+### [***`Посмотреть`:rocket:***](https://wouldrewind.github.io/IDAproject/)
+
+## Клонирование репозитория
+```
+git clone https://github.com/wouldRewind/IDAproject.git
+```
+
+## Установка зависимостей
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+## Запустить проект на локальном сервере
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+## Сборка
 ```
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
